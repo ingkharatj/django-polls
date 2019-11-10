@@ -57,3 +57,22 @@ def vote(request, question_id):
 def detail(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     return render(request, 'polls/detail.html', {'question': question})
+
+
+def get_queryset(self):
+    """
+    Return the last five published questions (not including those set to be
+    published in the future).
+    """
+    return Question.objects.filter(
+        pub_date__lte=timezone.now()
+    ).order_by('-pub_date')[:5]
+
+
+def table(request):
+    question_list = Question.objects.order_by('id')
+    all_question = Question.objects.all()
+    return render(request, 'polls/table.html',context={
+        'question' : question_list,
+        'all_question': all_question
+    })
